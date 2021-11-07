@@ -5,5 +5,5 @@ class MyFormatTestingClass
 
   attr_accessor :parameter
 
-  class_validate :parameter, format: /\d*/
+  class_validate :parameter, format: /\A\d*\z/
 end

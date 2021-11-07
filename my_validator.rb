@@ -18,7 +18,7 @@ module MyValidator
     end
 
     def validated_attributes
-      @validated_attributes
+      @validated_attributes ||= { }
     end
 
     def attr_accessor(*vars)
@@ -61,14 +61,16 @@ module MyValidator
     end
   end
 
+  private
+
   def perform_validation(parameter, validation_key, validation_value, tested_value)
     case validation_key
     when :presence
-      @valid = @valid && !send(parameter).nil?
+      @valid = @valid && instance_parameter_value_present?(parameter)
     when :format
-      @valid = @valid && !send(parameter) != nil && send(parameter) =~ validated_attributes[parameter][:format] # todo: test for cases when it is not a string but say an integer
+      @valid = @valid && consider_format_valid?(parameter)
     when :type
-      @valid = @valid && !send(parameter) != nil && send(parameter).class == validated_attributes[parameter][:format]
+      @valid = @valid && consider_type_valid?(parameter)
     else
       @valid
     end
@@ -77,13 +79,32 @@ module MyValidator
   def class_exception_validate!(parameter, validation_key, validation_value, tested_value)
     case validation_key
     when :presence
-      raise 'not nil' unless !send(parameter).nil?
+      raise 'attribute can not be nil' unless instance_parameter_value_present?(parameter)
     when :format
-      raise 'invalid format' unless !send(parameter) != nil && send(parameter) =~ validated_attributes[parameter][:format] # todo: test for cases when it is not a string but say an integer
+      raise 'invalid format' unless consider_format_valid?(parameter)
     when :type
-      raise 'invalid type' unless !send(parameter) != nil && send(parameter).class == validated_attributes[parameter][:format]
+      raise 'invalid type' unless consider_type_valid?(parameter)
     else
-      @valid
     end
+  end
+
+  def instance_parameter_value_present?(parameter)
+    !send(parameter).nil?
+  end
+
+  def instance_parameter_matches_format(parameter)
+    send(parameter).match?(validated_attributes[parameter][:format])
+  end
+
+  def instance_parameter_type_matches_type(parameter)
+    send(parameter).kind_of?(validated_attributes[parameter][:type]) # todo: test for bad user input (e.g. if user enters smth else instead of a class)
+  end
+
+  def consider_format_valid?(parameter)
+    instance_parameter_value_present?(parameter) && instance_parameter_matches_format(parameter)
+  end
+
+  def consider_type_valid?(parameter)
+    instance_parameter_value_present?(parameter) && instance_parameter_type_matches_type(parameter)
   end
 end
