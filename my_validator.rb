@@ -52,6 +52,9 @@ module MyValidator
 
   private
 
+  # todo: consider showing errors separately for each attribute
+  # like this: { parameter_name: [ error1, error2 ], parameter_two: [ error1 ] }
+
   def validate_everything
     @errors = []
     validated_attributes.keys.each do |parameter|
