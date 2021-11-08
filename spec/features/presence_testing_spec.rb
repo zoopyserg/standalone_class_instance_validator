@@ -1,4 +1,4 @@
-require './fixtures/my_presence_testing_class'
+require './spec/fixtures/my_presence_testing_class'
 
 RSpec.describe MyPresenceTestingClass do
   let(:instance) do

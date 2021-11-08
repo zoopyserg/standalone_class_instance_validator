@@ -1,4 +1,4 @@
-require './fixtures/my_class_with_all_validations'
+require './spec/fixtures/my_class_with_all_validations'
 
 RSpec.describe MyClassWithAllValidations do
   let(:instance) do

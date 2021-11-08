@@ -1,4 +1,4 @@
-require './fixtures/my_format_testing_different_parameter_class'
+require './spec/fixtures/my_format_testing_different_parameter_class'
 
 RSpec.describe MyFormatTestingDifferentParameterClass do
   let(:instance) do

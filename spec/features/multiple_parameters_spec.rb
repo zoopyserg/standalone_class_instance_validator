@@ -1,4 +1,4 @@
-require './fixtures/my_class_with_multiple_parameters'
+require './spec/fixtures/my_class_with_multiple_parameters'
 
 RSpec.describe MyClassWithMultipleParameters do
   let(:instance) do

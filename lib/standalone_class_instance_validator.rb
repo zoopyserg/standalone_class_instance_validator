@@ -1,4 +1,4 @@
-module MyValidator
+module StandaloneClassInstanceValidator
   def self.included(base)
     base.extend(ClassMethods)
   end

@@ -1,4 +1,4 @@
-require './fixtures/my_type_testing_class'
+require './spec/fixtures/my_type_testing_class'
 
 RSpec.describe MyTypeTestingClass do
   let(:instance) do
