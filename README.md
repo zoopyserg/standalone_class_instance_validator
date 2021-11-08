@@ -1,8 +1,8 @@
-== Standalone Class Instance Validator
+# Standalone Class Instance Validator
 
 An independent library that can validate attributes of any class, without a need to require external libraries.
 
-== Installation
+# Installation
 
 ````ruby
 # in Gemfile
@@ -10,7 +10,7 @@ An independent library that can validate attributes of any class, without a need
 gem 'standalone_class_instance_validator'
 ````
 
-== Demo
+# Demo
 
 Here is an example of code:
 ````
