@@ -42,48 +42,36 @@ module MyValidator
   end
 
   def class_valid?
-    @valid = true
-
-    validated_attributes.keys.each do |parameter|
-      tested_value = send(parameter)
-      full_validation_info = validated_attributes[parameter]
-      perform_validation(parameter, full_validation_info.keys[0], full_validation_info.values[0], tested_value)
-    end
-
-    @valid
+    validate_everything.empty?
   end
 
   def class_validate!
-    validated_attributes.keys.each do |parameter|
-      tested_value = send(parameter)
-      full_validation_info = validated_attributes[parameter]
-      class_exception_validate!(parameter, full_validation_info.keys[0], full_validation_info.values[0], tested_value)
-    end
+    errors = validate_everything
+    raise errors.join(',') unless errors.empty?
   end
 
   private
 
-  def perform_validation(parameter, validation_key, validation_value, tested_value)
-    case validation_key
-    when :presence
-      @valid = @valid && instance_parameter_value_present?(parameter)
-    when :format
-      @valid = @valid && consider_format_valid?(parameter)
-    when :type
-      @valid = @valid && consider_type_valid?(parameter)
-    else
-      @valid
+  def validate_everything
+    @errors = []
+    validated_attributes.keys.each do |parameter|
+      tested_value = send(parameter)
+      full_validation_info = validated_attributes[parameter]
+      full_validation_info.each do |key, value|
+        class_exception_validate!(parameter, key, value, tested_value)
+      end
     end
+    @errors
   end
 
   def class_exception_validate!(parameter, validation_key, validation_value, tested_value)
     case validation_key
     when :presence
-      raise 'attribute can not be nil' unless instance_parameter_value_present?(parameter)
+      @errors << 'attribute can not be nil' unless instance_parameter_value_present?(parameter)
     when :format
-      raise 'invalid format' unless consider_format_valid?(parameter)
+      @errors << 'invalid format' unless consider_format_valid?(parameter)
     when :type
-      raise 'invalid type' unless consider_type_valid?(parameter)
+      @errors << 'invalid type' unless consider_type_valid?(parameter)
     else
     end
   end
@@ -100,8 +88,12 @@ module MyValidator
     send(parameter).kind_of?(validated_attributes[parameter][:type]) # todo: test for bad user input (e.g. if user enters smth else instead of a class)
   end
 
+  def instance_parameter_is_a_string(parameter)
+    send(parameter).kind_of?(String) # todo: test for bad user input (e.g. if user enters smth else instead of a class)
+  end
+
   def consider_format_valid?(parameter)
-    instance_parameter_value_present?(parameter) && instance_parameter_matches_format(parameter)
+    instance_parameter_value_present?(parameter) && instance_parameter_is_a_string(parameter) && instance_parameter_matches_format(parameter)
   end
 
   def consider_type_valid?(parameter)
