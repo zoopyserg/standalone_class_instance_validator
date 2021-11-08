@@ -4,10 +4,6 @@ module StandaloneClassInstanceValidator
   end
 
   module ClassMethods
-    def initialize(params = {})
-
-    end
-
     def class_validate(attribute_name, validations_hash = { })
       @validated_attributes ||= { }
       @validated_attributes[attribute_name] ||= { }
@@ -20,25 +16,11 @@ module StandaloneClassInstanceValidator
     def validated_attributes
       @validated_attributes ||= { }
     end
-
-    def attr_accessor(*vars)
-      @attributes ||= []
-      @attributes.concat vars
-      super(*vars)
-    end
-
-    def attributes
-      @attributes
-    end
   end
 
 
   def validated_attributes
     self.class.validated_attributes
-  end
-
-  def attributes
-    self.class.attributes
   end
 
   def class_valid?
